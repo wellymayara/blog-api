@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,7 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
 
      public Post createPost(Post post) {
+         post.setPublishDate(LocalDateTime.now());
         return  postRepository.save(post);
     };
 

@@ -21,6 +21,8 @@ public class Post {
     private String slug;
     private String content;
 
+    private String imageUrl;
+
     @ManyToOne
     private Author author;
     private String category;
