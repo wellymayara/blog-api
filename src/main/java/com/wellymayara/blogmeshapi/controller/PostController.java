@@ -4,6 +4,8 @@ import com.wellymayara.blogmeshapi.exception.BadRequestException;
 import com.wellymayara.blogmeshapi.model.Post;
 import com.wellymayara.blogmeshapi.service.PostService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,15 +23,25 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Post>> getAllPosts() {
-        return  ResponseEntity.ok(postService.getPosts());
+    public ResponseEntity<Page<Post>> getAllPosts(Pageable pageable) {
+        return ResponseEntity.ok(postService.getPosts(pageable));
     }
 
-    @GetMapping("/:id")
-    public ResponseEntity<Post> getPostById(Long id){
-        return ResponseEntity.ok(postService.getPostById(id).orElseThrow(() -> new BadRequestException("post not found")));
+    @GetMapping("/{id}")
+    public ResponseEntity<Post> getPostById(@PathVariable Long id) {
+        return ResponseEntity.ok(postService.getPostById(id)
+                .orElseThrow(() -> new BadRequestException("Post not found")));
     }
 
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<Post>> getPostsByCategory(@PathVariable String category) {
+        List<Post> posts = postService.getPostsByCategory(category)
+                .orElseThrow(() -> new BadRequestException("Category not found"));
+        return ResponseEntity.ok(posts);
+    }
 
-
+    @GetMapping("/category")
+    public ResponseEntity<List<String>> getCategories() {
+        return ResponseEntity.ok(postService.getDistinctCategory());
+    }
 }
